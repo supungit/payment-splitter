@@ -16,6 +16,12 @@ interface Expense {
   selectedUsers: number[];
 }
 
+interface UserBalanceHistory {
+  userId: number;
+  previousBalance: number;
+  timestamp: number;
+}
+
 function App() {
   const [users, setUsers] = useState<User[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -28,6 +34,7 @@ function App() {
   const [paymentAmounts, setPaymentAmounts] = useState<Record<number, string>>({});
   const [saveStatus, setSaveStatus] = useState('');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [balanceHistory, setBalanceHistory] = useState<UserBalanceHistory[]>([]);
 
   // Load data from localStorage on component mount
   useEffect(() => {
@@ -177,6 +184,13 @@ function App() {
     if (!user) return;
     
     if (window.confirm(`Are you sure you want to settle ${user.name}'s balance? This will set their balance to 0.`)) {
+      // Store the previous balance in history
+      setBalanceHistory(prev => [...prev, {
+        userId,
+        previousBalance: user.balance,
+        timestamp: Date.now()
+      }]);
+
       setUsers(prevUsers => prevUsers.map(user => 
         user.id === userId ? { ...user, balance: 0 } : user
       ));
@@ -188,6 +202,27 @@ function App() {
       setToast({ message: `${user.name}'s balance settled successfully`, type: 'success' });
       saveData();
     }
+  };
+
+  const undoLastSettlement = () => {
+    const lastSettlement = balanceHistory[balanceHistory.length - 1];
+    if (!lastSettlement) return;
+
+    const user = users.find(u => u.id === lastSettlement.userId);
+    if (!user) return;
+
+    setUsers(prevUsers => prevUsers.map(user => 
+      user.id === lastSettlement.userId 
+        ? { ...user, balance: lastSettlement.previousBalance } 
+        : user
+    ));
+
+    setBalanceHistory(prev => prev.slice(0, -1));
+    setToast({ 
+      message: `${user.name}'s balance restored to LKR ${lastSettlement.previousBalance.toFixed(2)}`, 
+      type: 'success' 
+    });
+    saveData();
   };
 
   return (
@@ -265,7 +300,17 @@ function App() {
         <div className="right-content">
           {/* User List with Balances */}
           <div className="section">
-            <h2>User Balances</h2>
+            <div className="section-header">
+              <h2>User Balances</h2>
+              {balanceHistory.length > 0 && (
+                <button 
+                  className="button outline"
+                  onClick={undoLastSettlement}
+                >
+                  Undo Last Settlement
+                </button>
+              )}
+            </div>
             <table className="data-table">
               <thead>
                 <tr>
@@ -304,12 +349,14 @@ function App() {
                           </>
                         )}
                         {user.balance !== 0 && (
-                          <button 
-                            className="button primary"
-                            onClick={() => settleUserBalance(user.id)}
-                          >
-                            Settle
-                          </button>
+                          <div className="button-group">
+                            <button 
+                              className="button outline"
+                              onClick={() => settleUserBalance(user.id)}
+                            >
+                              Settle
+                            </button>
+                          </div>
                         )}
                       </div>
                     </td>

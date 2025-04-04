@@ -146,6 +146,18 @@ h2 {
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
 
+.button.outline {
+  background-color: white;
+  color: #000000;
+  border: 1px solid #000000;
+}
+
+.button.outline:hover {
+  background-color: #f8f8f8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
 .user-selection {
   margin: 10px 0;
   background-color: #fafafa;
@@ -229,8 +241,13 @@ h2 {
   min-width: 60px;
 }
 
+.payment-form .button-group {
+  display: flex;
+  gap: 4px;
+}
+
 .data-table td:last-child {
-  min-width: 200px;
+  min-width: 220px;
 }
 
 @media (max-width: 1024px) {
