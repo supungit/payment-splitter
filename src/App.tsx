@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import Toast from './components/Toast';
 
 interface User {
   id: number;
@@ -26,6 +27,7 @@ function App() {
   });
   const [paymentAmounts, setPaymentAmounts] = useState<Record<number, string>>({});
   const [saveStatus, setSaveStatus] = useState('');
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   // Load data from localStorage on component mount
   useEffect(() => {
@@ -44,9 +46,11 @@ function App() {
         setExpenses(JSON.parse(savedExpenses));
       }
       setSaveStatus('Data loaded successfully');
+      setToast({ message: 'Data loaded successfully', type: 'success' });
     } catch (error) {
       console.error('Error loading data:', error);
       setSaveStatus('Error loading data');
+      setToast({ message: 'Error loading data', type: 'error' });
     }
   };
 
@@ -55,9 +59,11 @@ function App() {
       localStorage.setItem('users', JSON.stringify(users));
       localStorage.setItem('expenses', JSON.stringify(expenses));
       setSaveStatus('Data saved successfully');
+      setToast({ message: 'Data saved successfully', type: 'success' });
     } catch (error) {
       console.error('Error saving data:', error);
       setSaveStatus('Error saving data');
+      setToast({ message: 'Error saving data', type: 'error' });
     }
   };
 
@@ -68,6 +74,7 @@ function App() {
       setUsers([]);
       setExpenses([]);
       setSaveStatus('Data cleared successfully');
+      setToast({ message: 'Data cleared successfully', type: 'success' });
     }
   };
 
@@ -320,6 +327,14 @@ function App() {
           </div>
         </div>
       </div>
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }
