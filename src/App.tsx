@@ -170,147 +170,153 @@ function App() {
       <h1>Payment Splitter</h1>
       
       <div className="compact-container">
-        {/* Add User Form */}
-        <div className="section">
-          <h2>Add New User</h2>
-          <form onSubmit={addUser} className="form">
-            <div className="form-row">
-              <input
-                type="text"
-                value={newUserName}
-                onChange={(e) => setNewUserName(e.target.value)}
-                placeholder="Enter user name"
-                className="input"
-              />
-              <button type="submit" className="button primary">Add</button>
-            </div>
-          </form>
+        <div className="left-sidebar">
+          {/* Add User Form */}
+          <div className="section">
+            <h2>Add New User</h2>
+            <form onSubmit={addUser} className="form">
+              <div className="form-row">
+                <input
+                  type="text"
+                  value={newUserName}
+                  onChange={(e) => setNewUserName(e.target.value)}
+                  placeholder="Enter user name"
+                  className="input"
+                />
+                <button type="submit" className="button primary">Add</button>
+              </div>
+            </form>
+          </div>
+
+          {/* Add Expense Form */}
+          <div className="section">
+            <h2>Add New Expense</h2>
+            <form onSubmit={addExpense} className="form">
+              <div className="form-row">
+                <input
+                  type="number"
+                  value={newExpense.amount}
+                  onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
+                  placeholder="Amount"
+                  className="input"
+                  step="0.01"
+                  min="0"
+                />
+                <input
+                  type="text"
+                  value={newExpense.description}
+                  onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })}
+                  placeholder="Description"
+                  className="input"
+                />
+                <button type="submit" className="button primary">Add</button>
+              </div>
+              <div className="user-selection">
+                <table className="user-table">
+                  <tbody>
+                    {users.map(user => (
+                      <tr key={user.id}>
+                        <td>
+                          <label className="user-checkbox">
+                            <input
+                              type="checkbox"
+                              checked={newExpense.selectedUsers.includes(user.id)}
+                              onChange={() => toggleUserSelection(user.id)}
+                            />
+                            {user.name}
+                          </label>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </form>
+          </div>
+
+          
         </div>
 
-        {/* Add Expense Form */}
-        <div className="section">
-          <h2>Add New Expense</h2>
-          <form onSubmit={addExpense} className="form">
-            <div className="form-row">
-              <input
-                type="number"
-                value={newExpense.amount}
-                onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
-                placeholder="Amount"
-                className="input"
-                step="0.01"
-                min="0"
-              />
-              <input
-                type="text"
-                value={newExpense.description}
-                onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })}
-                placeholder="Description"
-                className="input"
-              />
-              <button type="submit" className="button primary">Add</button>
-            </div>
-            <div className="user-selection">
-              <table className="user-table">
-                <tbody>
-                  {users.map(user => (
-                    <tr key={user.id}>
-                      <td>
-                        <label className="user-checkbox">
+        <div className="right-content">
+          {/* User List with Balances */}
+          <div className="section">
+            <h2>User Balances</h2>
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Balance</th>
+                  <th>Payment</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map(user => (
+                  <tr key={user.id}>
+                    <td>{user.name}</td>
+                    <td className={`balance ${user.balance > 0 ? 'positive' : user.balance < 0 ? 'negative' : ''}`}>
+                      LKR {user.balance.toFixed(2)}
+                    </td>
+                    <td>
+                      {user.balance > 0 && (
+                        <div className="payment-form">
                           <input
-                            type="checkbox"
-                            checked={newExpense.selectedUsers.includes(user.id)}
-                            onChange={() => toggleUserSelection(user.id)}
+                            type="number"
+                            placeholder="Amount"
+                            className="input small"
+                            min="0"
+                            max={user.balance}
+                            step="0.01"
+                            value={paymentAmounts[user.id] || ''}
+                            onChange={(e) => handlePaymentInputChange(user.id, e.target.value)}
                           />
-                          {user.name}
-                        </label>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                          <button 
+                            className="button secondary"
+                            onClick={() => recordPayment(user.id)}
+                          >
+                            Pay
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Expense History */}
+          <div className="section">
+            <h2>Expense History</h2>
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th>Users</th>
+                </tr>
+              </thead>
+              <tbody>
+                {expenses.map(expense => (
+                  <tr key={expense.id}>
+                    <td>{new Date(expense.date).toLocaleDateString()}</td>
+                    <td>{expense.description}</td>
+                    <td>LKR {expense.amount.toFixed(2)}</td>
+                    <td>{expense.selectedUsers.length}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Data Management Buttons */}
+          <div className="section">
+            <div className="data-management">
+              <button onClick={saveData} className="button primary">Save Data</button>
+              <button onClick={loadData} className="button secondary">Load Data</button>
+              <button onClick={clearData} className="button danger">Clear Data</button>
+              <span className="save-status">{saveStatus}</span>
             </div>
-          </form>
-        </div>
-
-        {/* User List with Balances */}
-        <div className="section">
-          <h2>User Balances</h2>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Balance</th>
-                <th>Payment</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map(user => (
-                <tr key={user.id}>
-                  <td>{user.name}</td>
-                  <td className={`balance ${user.balance > 0 ? 'positive' : user.balance < 0 ? 'negative' : ''}`}>
-                    LKR {user.balance.toFixed(2)}
-                  </td>
-                  <td>
-                    {user.balance > 0 && (
-                      <div className="payment-form">
-                        <input
-                          type="number"
-                          placeholder="Amount"
-                          className="input small"
-                          min="0"
-                          max={user.balance}
-                          step="0.01"
-                          value={paymentAmounts[user.id] || ''}
-                          onChange={(e) => handlePaymentInputChange(user.id, e.target.value)}
-                        />
-                        <button 
-                          className="button secondary"
-                          onClick={() => recordPayment(user.id)}
-                        >
-                          Pay
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Expense History */}
-        <div className="section">
-          <h2>Expense History</h2>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Amount</th>
-                <th>Users</th>
-              </tr>
-            </thead>
-            <tbody>
-              {expenses.map(expense => (
-                <tr key={expense.id}>
-                  <td>{new Date(expense.date).toLocaleDateString()}</td>
-                  <td>{expense.description}</td>
-                  <td>LKR {expense.amount.toFixed(2)}</td>
-                  <td>{expense.selectedUsers.length}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Data Management Buttons */}
-        <div className="section">
-          <div className="data-management">
-            <button onClick={saveData} className="button primary">Save Data</button>
-            <button onClick={loadData} className="button secondary">Load Data</button>
-            <button onClick={clearData} className="button danger">Clear Data</button>
-            <span className="save-status">{saveStatus}</span>
           </div>
         </div>
       </div>

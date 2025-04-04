@@ -1,8 +1,8 @@
 .App {
   margin: 0 auto;
-  padding: 30px;
+  padding: 20px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   background-color: #fafafa;
   min-height: 100vh;
 }
@@ -10,66 +10,80 @@
 h1 {
   text-align: center;
   color: #000000;
-  margin-bottom: 40px;
-  font-size: 2.5em;
+  margin-bottom: 25px;
+  font-size: 2em;
   font-weight: 700;
   letter-spacing: -0.5px;
 }
 
 h2 {
   color: #000000;
-  margin-bottom: 20px;
-  font-size: 1.6em;
+  margin-bottom: 15px;
+  font-size: 1.3em;
   font-weight: 600;
   letter-spacing: -0.3px;
 }
 
 .compact-container {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 20px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.left-sidebar {
+  position: sticky;
+  top: 20px;
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.right-content {
+  min-height: calc(100vh - 100px);
 }
 
 .section {
   background: white;
-  border-radius: 12px;
-  padding: 25px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .data-management {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .save-status {
-  margin-left: 15px;
+  margin-left: 10px;
   color: #27ae60;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
 
 .form-row {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   align-items: center;
 }
 
 .input {
-  padding: 12px 16px;
-  font-size: 14px;
+  padding: 8px 12px;
+  font-size: 13px;
   border: 1px solid #000000;
-  border-radius: 8px;
+  border-radius: 6px;
   transition: all 0.2s ease;
   background-color: #ffffff;
   width: 100%;
@@ -78,25 +92,25 @@ h2 {
 .input:focus {
   outline: none;
   border-color: #000000;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
 
 .input.small {
-  width: 120px;
+  width: 100px;
   text-align: right;
 }
 
 .button {
-  padding: 12px 24px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   transition: all 0.2s ease;
   white-space: nowrap;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
 }
 
 .button.primary {
@@ -107,7 +121,7 @@ h2 {
 .button.primary:hover {
   background-color: #333333;
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
 
 .button.secondary {
@@ -118,7 +132,7 @@ h2 {
 .button.secondary:hover {
   background-color: #000000;
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
 
 .button.danger {
@@ -129,34 +143,34 @@ h2 {
 .button.danger:hover {
   background-color: #b91c1c;
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
 
 .user-selection {
-  margin: 15px 0;
+  margin: 10px 0;
   background-color: #fafafa;
-  border-radius: 8px;
-  padding: 15px;
+  border-radius: 6px;
+  padding: 10px;
 }
 
 .user-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 8px;
+  border-spacing: 0 4px;
 }
 
 .user-table td {
-  padding: 8px 12px;
+  padding: 6px 10px;
 }
 
 .user-checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
-  font-size: 14px;
-  padding: 8px;
-  border-radius: 6px;
+  font-size: 13px;
+  padding: 6px;
+  border-radius: 4px;
   transition: background-color 0.2s ease;
 }
 
@@ -168,12 +182,12 @@ h2 {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .data-table th,
 .data-table td {
-  padding: 16px;
+  padding: 10px;
   text-align: left;
   border-bottom: 1px solid #eee;
 }
@@ -183,7 +197,7 @@ h2 {
   font-weight: 600;
   color: #000000;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.5px;
 }
 
@@ -193,7 +207,7 @@ h2 {
 
 .balance {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .balance.positive {
@@ -206,17 +220,35 @@ h2 {
 
 .payment-form {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .compact-container {
+    grid-template-columns: 1fr;
+  }
+
+  .left-sidebar {
+    position: relative;
+    top: 0;
+    height: auto;
+    overflow-y: visible;
+    padding-right: 0;
+  }
+
+  .right-content {
+    min-height: auto;
+  }
 }
 
 @media (max-width: 600px) {
   .App {
-    padding: 20px;
+    padding: 15px;
   }
 
   .section {
-    padding: 20px;
+    padding: 15px;
   }
 
   .form-row {
@@ -242,7 +274,7 @@ h2 {
 
   .save-status {
     margin-left: 0;
-    margin-top: 10px;
+    margin-top: 8px;
     text-align: center;
   }
 }
