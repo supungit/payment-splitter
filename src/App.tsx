@@ -172,6 +172,24 @@ function App() {
     }));
   };
 
+  const settleUserBalance = (userId: number) => {
+    const user = users.find(u => u.id === userId);
+    if (!user) return;
+    
+    if (window.confirm(`Are you sure you want to settle ${user.name}'s balance? This will set their balance to 0.`)) {
+      setUsers(prevUsers => prevUsers.map(user => 
+        user.id === userId ? { ...user, balance: 0 } : user
+      ));
+      setPaymentAmounts(prev => {
+        const newAmounts = { ...prev };
+        delete newAmounts[userId];
+        return newAmounts;
+      });
+      setToast({ message: `${user.name}'s balance settled successfully`, type: 'success' });
+      saveData();
+    }
+  };
+
   return (
     <div className="App">
       <h1>Payment Splitter</h1>
@@ -253,7 +271,7 @@ function App() {
                 <tr>
                   <th>Name</th>
                   <th>Balance</th>
-                  <th>Payment</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -264,26 +282,36 @@ function App() {
                       LKR {user.balance.toFixed(2)}
                     </td>
                     <td>
-                      {user.balance > 0 && (
-                        <div className="payment-form">
-                          <input
-                            type="number"
-                            placeholder="Amount"
-                            className="input small"
-                            min="0"
-                            max={user.balance}
-                            step="0.01"
-                            value={paymentAmounts[user.id] || ''}
-                            onChange={(e) => handlePaymentInputChange(user.id, e.target.value)}
-                          />
+                      <div className="payment-form">
+                        {user.balance > 0 && (
+                          <>
+                            <input
+                              type="number"
+                              placeholder="Amount"
+                              className="input small"
+                              min="0"
+                              max={user.balance}
+                              step="0.01"
+                              value={paymentAmounts[user.id] || ''}
+                              onChange={(e) => handlePaymentInputChange(user.id, e.target.value)}
+                            />
+                            <button 
+                              className="button secondary"
+                              onClick={() => recordPayment(user.id)}
+                            >
+                              Pay
+                            </button>
+                          </>
+                        )}
+                        {user.balance !== 0 && (
                           <button 
-                            className="button secondary"
-                            onClick={() => recordPayment(user.id)}
+                            className="button primary"
+                            onClick={() => settleUserBalance(user.id)}
                           >
-                            Pay
+                            Settle
                           </button>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

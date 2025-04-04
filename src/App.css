@@ -222,6 +222,15 @@ h2 {
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.payment-form .button {
+  min-width: 60px;
+}
+
+.data-table td:last-child {
+  min-width: 200px;
 }
 
 @media (max-width: 1024px) {
@@ -277,4 +286,22 @@ h2 {
     margin-top: 8px;
     text-align: center;
   }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.section-header h2 {
+  margin-bottom: 0;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
 }
